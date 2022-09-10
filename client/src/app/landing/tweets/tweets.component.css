@@ -1,0 +1,11 @@
+.container-tweets {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-tweets p {
+    font-size: 1.1rem;
+    border-bottom: 1px solid black;
+    padding: 10px;
+    word-wrap: break-word;
+}

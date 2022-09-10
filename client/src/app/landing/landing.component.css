@@ -1,0 +1,77 @@
+.landing-page {
+    display: grid;
+    grid-template-columns: 200px 70% 200px;
+    grid-template-rows: 100px;
+    height: 100vh;
+}
+
+.navbar {
+    border: 1px solid blue;
+    grid-column: 1 / -1;
+    grid-template-rows: 1;
+}
+
+.container-main-readings {
+    border: 1px solid red;
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.container-recent-tweets {
+    border: 1px solid black;
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.container-frequent-words {
+    border: 1px solid black;
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.background-add-reading-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(33, 33, 33, 0.9);
+}
+
+.container-add-reading-modal {
+    width: 35%;
+    background-color: white;
+    border-radius: 5px;
+    margin: 10rem auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.textarea-add-new-reading {
+    width: 30rem;
+    height: 10rem;
+    font-size: 1rem;
+    text-indent: 5px;
+}
+
+#add-new-reading {
+    border: none;
+    border-radius: 5px;
+    background-color: black;
+    padding: 5px 10px;
+    color: white;
+    margin: 30px auto auto 10px;
+    cursor: pointer;
+}
+
+.btn-add-new-reading {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid black;
+    margin: 10px;
+    padding: 5px;
+    cursor: pointer;
+}

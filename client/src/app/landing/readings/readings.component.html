@@ -1,0 +1,24 @@
+<div class="individual-reading">
+    <p class="text" (copy)="fetchWordTranslation($event)">{{reading.Text}}</p>
+    <button class="btn-toggle-translation" type="button" (click)="toggleTranslationDisplay()">Toggle translation</button>
+    <div class="wrapper-translation">
+        <p [ngClass]="{'show': showTranslation}" class="translation hide">{{reading.Translation}}</p>
+        <textarea type="text" placeholder="Translate here" value="{{reading.Translation}}" [formControl]="updatedTranslation"></textarea>
+    </div>
+    <button type="submit" class="btn-submit" (click)="updateTranslation()">Update</button>
+    <button type="button" class="btn-delete" (click)="deleteReading()">
+        <img src="/assets/landing/trash-can-solid.svg" alt="delete-icon" class="delete-icon">
+    </button>
+</div>
+<div class="container-word-description" *ngIf="displayWordDescription">
+    <img src="/assets/landing/x-solid.svg" alt="close-description-icon" class="close-description-icon" (click)="toggleDisplayWordDescription()">
+    <div class="container-word-reading">
+        <h3>{{wordDescription[0].Japanese[0].Word}}</h3>
+        <p>{{wordDescription[0].Japanese[0].Reading}}</p>
+    </div>
+    <p class="word-definition">{{wordDescription[0].Senses[0].English_definition}}</p>
+    <div class="container-meta-description">
+        <p>Common: {{wordDescription[0].Is_common}}</p>
+        <p>{{wordDescription[0].Jlpt[0]}}</p>
+    </div>
+</div>

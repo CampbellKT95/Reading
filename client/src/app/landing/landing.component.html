@@ -1,0 +1,27 @@
+<div class="landing-page" (click)="toggleAddReadingModal($event, 'body')">
+    <!-- include important/frequently used sites -->
+    <nav class="navbar">
+        <button (click)="toggleAddReadingModal($event, 'button')" id="add-new-reading">Add New Reading</button>
+        <!-- link to nhk news easy -->
+        <!-- link to jisho -->
+        <!-- link to tae kim -->
+    </nav>
+    <!-- where the main readings will be rendered -->
+    <main class="container-main-readings">
+        <div *ngFor="let reading of allReadings">
+            <app-readings [reading]="reading"></app-readings>
+        </div>
+    </main>
+    <div class="background-add-reading-modal" *ngIf="addReadingModal">
+        <div class="container-add-reading-modal">
+            <textarea placeholder="Add a new reading" class="textarea-add-new-reading" [formControl]="newReading"></textarea>
+            <button type="button" class="btn-add-new-reading" (click)="addReading()">Add</button>
+        </div>
+    </div>
+    <!-- recent tweets -->
+    <aside class="container-recent-tweets">
+        <app-tweets></app-tweets>
+    </aside>
+    <!-- frequently seen words -->
+    <aside class="container-frequent-words"></aside>
+  </div>

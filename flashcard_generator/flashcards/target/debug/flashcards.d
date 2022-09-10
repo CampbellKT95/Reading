@@ -1,0 +1,1 @@
+/Users/kadincampbell/Desktop/reading/flashcard_generator/flashcards/target/debug/flashcards: /Users/kadincampbell/Desktop/reading/flashcard_generator/flashcards/src/data/connection.rs /Users/kadincampbell/Desktop/reading/flashcard_generator/flashcards/src/data/env_conn.rs /Users/kadincampbell/Desktop/reading/flashcard_generator/flashcards/src/main.rs
