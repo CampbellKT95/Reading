@@ -9,3 +9,9 @@ pub struct Flashcard {
     pub difficulty: i32,
     pub last_reviewed: String
 }
+
+#[derive(Debug)]
+pub struct Card_Position {
+    pub position: i32,
+    pub word: String
+}
