@@ -8,7 +8,8 @@ fn ask_input() {
     println!("[2] View all current cards");
     println!("[3] Edit a card");
     println!("[4] Delete a card");
-    println!("[0] Exit");
+    println!("[5] Clear lists");
+    println!("[0] Exit\n");
 }
 
 pub fn handle_input() {
@@ -27,8 +28,12 @@ pub fn handle_input() {
     
         } else if user_resp.as_str().trim() == "2" {
             let all_cards: Vec<String> = repository::read_all_cards();
+            
+            // parse cards from json into their objects, then print them            
             for card in all_cards {
-                println!("{:?}", card);
+                let parsed_card: flashcards::Flashcard = serde_json::from_str(&card).unwrap();
+                println!("\n | Word: {} | Furigana: {} | Definition: {} | Example: {} | Difficulty: {} | Last Review: {}\n", parsed_card.word, parsed_card.furigana, parsed_card.definition, parsed_card.example, parsed_card.difficulty, parsed_card.last_reviewed);
+                println!("-------------------------------------------------------------------\n");
             }
     
         } else if user_resp.as_str().trim() == "3" {
@@ -38,6 +43,9 @@ pub fn handle_input() {
         } else if user_resp.as_str().trim() == "4" {
             let card_position: String = choose_card();
             repository::delete_one_card(card_position).expect("Failed to delete item");
+
+        } else if user_resp.as_str().trim() == "5" {
+            repository::clear_lists();
             
         } else if user_resp.as_str().trim() == "0" {
             println!("\nTerminating...\n");
@@ -82,36 +90,57 @@ pub fn create_card() -> flashcards::Flashcard {
 
 // for cards to edit/delete
 fn choose_card() -> String {
-    println!("Choose the position of card would you like to interact with");
+    println!("\nHow would you like to choose a card?\n");
 
-    let mut all_card_position: Vec<flashcards::CardPosition> = Vec::new();
+    println!("[1] Type out word");
+    println!("[2] View all cards & select position");
 
-    let all_cards: Vec<String> = repository::read_all_cards();
-    let mut position_counter: i32 = 0;
+    let mut method_choice: String = String::new();
+    io::stdin().read_line(&mut method_choice).expect("Failed to read user method choice");
 
-    for card in all_cards {
-        println!("\n{}\n", card);
+    // the position being searched for
+    let mut user_choice_position: String = String::new();
 
-        let parsed_card: Result<flashcards::Flashcard, serde_json::Error> = serde_json::from_str(&card);
+    if method_choice.to_string().trim() == "1" {
+        println!("\nPlease type the word you wish to choose\n");
 
-        let position = flashcards::CardPosition {
-            position: position_counter,
-            word: parsed_card.unwrap().word
-        };
-        position_counter += 1;
+        let mut desired_word: String = String::new();
+        io::stdin().read_line(&mut desired_word).expect("Failed to read user's word");
 
-        all_card_position.push(position);
+        let word_position: i32 = repository::find_index(&desired_word);
+        user_choice_position = word_position.to_string();
+
+    } else if method_choice.to_string().trim() == "2" {
+        let mut all_card_position: Vec<flashcards::CardPosition> = Vec::new();
+
+        let all_cards: Vec<String> = repository::read_all_cards();
+        let mut position_counter: i32 = 0;
+    
+        for card in all_cards {
+            println!("\n{}\n", card);
+    
+            let parsed_card: flashcards::Flashcard = serde_json::from_str(&card).unwrap();
+    
+            let position = flashcards::CardPosition {
+                position: position_counter,
+                word: parsed_card.word
+            };
+            position_counter += 1;
+    
+            all_card_position.push(position);
+        }
+    
+        for card in all_card_position {
+            println!("[{}]: {}", card.position, card.word);
+        }
+
+        println!("\n Please type the position of the word you wish to select\n");
+        io::stdin().read_line(&mut user_choice_position).expect("Failed to read card choice");
+
+    } else {
+        println!("Command not recognized, returning to main menu");
     }
 
-    for card in all_card_position {
-        println!("[{}]: {}", card.position, card.word);
-    }
-
-    let mut user_choice: String = String::new();
-    io::stdin().read_line(&mut user_choice).expect("Failed to read card choice");
-
-    println!("{}", user_choice);
-    let position = user_choice.as_str().trim().to_owned();
-
+    let position = user_choice_position.as_str().trim().to_owned();
     return position;
 }

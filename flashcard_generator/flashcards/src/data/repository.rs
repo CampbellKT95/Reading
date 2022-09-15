@@ -7,6 +7,8 @@ extern crate redis;
 pub fn add_card(new_card: flashcards::Flashcard ) -> i32 {
     let mut connection = connection::connect();
 
+    let _: i32 = redis::cmd("LPUSH").arg("card_indexing").arg(&new_card.word).query(&mut connection).unwrap();
+
     // convert newly created card to JSON
     let s_card = serde_json::to_string(&new_card).unwrap();
 
@@ -22,6 +24,14 @@ pub fn read_all_cards() -> Vec<String>  {
     let all_cards: RedisResult<Vec<String>> = redis::cmd("LRANGE").arg("flashcards").arg(0).arg(-1).query(&mut connection);
 
     return all_cards.unwrap();
+}
+
+pub fn find_index(word: &str) -> i32 {
+    let mut connection = connection::connect();
+
+    let index: i32 = redis::cmd("LPOS").arg("card_indexing").arg(word).query(&mut connection).unwrap();
+
+    return index;
 }
 
 // for edit & delete, find the position of the item first with LPOS, then LSET/LREM it
@@ -48,4 +58,11 @@ pub fn delete_one_card(card_position: String) -> RedisResult<()> {
     let _: RedisResult<i32> = redis::cmd("LREM").arg("flashcards").arg(1).arg(el_at_index.unwrap()).query(&mut connection);
 
     Ok(())
+}
+
+pub fn clear_lists() {
+    let mut connection = connection::connect();
+
+    let _ : ()= redis::cmd("DEL").arg("flashcards").query(&mut connection).unwrap();
+    let _ : () = redis::cmd("DEL").arg("card_indexing").query(&mut connection).unwrap();
 }
