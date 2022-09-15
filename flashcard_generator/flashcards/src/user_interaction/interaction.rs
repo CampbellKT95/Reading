@@ -1,5 +1,4 @@
 use std::io;
-use redis::{Iter};
 use chrono::prelude::*;
 use crate::flashcards;
 use crate::repository;
@@ -27,18 +26,18 @@ pub fn handle_input() {
             println!("{}", card_added);
     
         } else if user_resp.as_str().trim() == "2" {
-            let all_cards: Iter<String> = repository::read_all_cards();
+            let all_cards: Vec<String> = repository::read_all_cards();
             for card in all_cards {
                 println!("{:?}", card);
             }
     
         } else if user_resp.as_str().trim() == "3" {
             let card_position: String = choose_card();
-            repository::edit_card(card_position);
+            repository::edit_card(card_position).expect("Failed to edit card");
     
         } else if user_resp.as_str().trim() == "4" {
             let card_position: String = choose_card();
-            repository::delete_one_card(card_position);
+            repository::delete_one_card(card_position).expect("Failed to delete item");
             
         } else if user_resp.as_str().trim() == "0" {
             println!("\nTerminating...\n");
@@ -85,18 +84,21 @@ pub fn create_card() -> flashcards::Flashcard {
 fn choose_card() -> String {
     println!("Choose the position of card would you like to interact with");
 
-    let mut all_card_position: Vec<flashcards::Card_Position> = Vec::new();
+    let mut all_card_position: Vec<flashcards::CardPosition> = Vec::new();
 
-    let all_cards: Iter<String> = repository::read_all_cards();
+    let all_cards: Vec<String> = repository::read_all_cards();
+    let mut position_counter: i32 = 0;
+
     for card in all_cards {
         println!("\n{}\n", card);
 
         let parsed_card: Result<flashcards::Flashcard, serde_json::Error> = serde_json::from_str(&card);
 
-        let position = flashcards::Card_Position {
-            position: 1,
+        let position = flashcards::CardPosition {
+            position: position_counter,
             word: parsed_card.unwrap().word
         };
+        position_counter += 1;
 
         all_card_position.push(position);
     }

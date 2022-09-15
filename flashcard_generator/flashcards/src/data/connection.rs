@@ -1,5 +1,5 @@
 #[path = "./env_conn.rs"] mod environment;
-extern crate redis;
+pub extern crate redis;
 
 pub fn connect() -> redis::Connection {
     let redis_conn_string = format!("redis://default:{}@{}:{}", environment::REDIS_PASS, environment::REDIS_HOST, environment::REDIS_PORT);

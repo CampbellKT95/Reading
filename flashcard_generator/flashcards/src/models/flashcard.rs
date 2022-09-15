@@ -11,7 +11,7 @@ pub struct Flashcard {
 }
 
 #[derive(Debug)]
-pub struct Card_Position {
+pub struct CardPosition {
     pub position: i32,
     pub word: String
 }
